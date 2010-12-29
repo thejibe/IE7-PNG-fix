@@ -1,0 +1,78 @@
+<?php
+// $Id$
+
+/**
+ *
+ * @author
+ *  Darko Zoroja darko@zoroja.com
+ *    Wrote the jQuery plugin to fix the IE7 multiple filters problem
+ *    that affects opacity transitions (aka fade in/out effects) on
+ *    PNGs that include transparency.
+ *  Ben Holt ben@thejibe.com
+ *    I was so happy with Darko's fix I decided to turn it into a
+ *    Drupal module.
+ *
+ *  Background info on the issue here:
+ *  http://blogs.msdn.com/ie/archive/2005/04/26/412263.aspx
+ *  (esp the first point under 'There are also a couple of limitations worth mentioning')
+ */
+
+function ie7_png_fix_menu() {
+
+  $items = array();
+
+  $items['admin/settings/ie7_png_fix'] = array(
+    'title' => 'IE7 PNG Fix Settings',
+    'description' => 'Settings for the IE7 PNG Fix module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ie7_png_fix_admin'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+  return $items;
+}
+
+
+function ie7_png_fix_init() {
+  // Add javascript to page on init
+  drupal_add_js(array('ie7_png_fix' => array('cleargif'                => '/'
+                                                                          . drupal_get_path('module', 'ie7_png_fix')
+                                                                          . '/files/clear.gif',
+                                             'targetclass'             => variable_get('ie7_png_fix_targetclass',
+                                                                                       'ie7-png-fix')
+                                            )
+                     ), 'setting');
+
+  drupal_add_js(drupal_get_path('module', 'ie7_png_fix') . '/js/ie7_png_fix.js');
+
+}
+
+
+function ie7_png_fix_admin() {
+  // module config form
+  $form['ie7_png_fix_targetclass'] = array ('#type' => 'textfield',
+                                            '#title' => t('Target Class'),
+                                            '#default_value' => variable_get('ie7_png_fix_targetclass', 'ie7-png-fix'),
+                                            '#size' => 10,
+                                            '#maxlength' => 20,
+                                            '#description' => t('The CSS class used to identify transparent PNG images that '
+                                                               .'have alpha filters applied.  The result should be that '
+                                                               .'the CSS selector \'.&lt;target class&gt; img\' selects '
+                                                               .'the effected images. Selecting more images than necessary '
+                                                               .'will result in unnecessary load on the users browser.'),
+                                            '#required' => TRUE,
+                                        );
+
+  return system_settings_form($form);
+
+}
+
+
+function ie7_png_fix_admin_validate($form, &$form_state) {
+  // Validate the module config form
+  if ( !preg_match('/^[a-zA-Z]{1}[a-zA-Z0-9_-]*$/', $form_state['values']['ie7_png_fix_targetclass'], $matches)) {
+    form_set_error('ie7_png_fix_targetclass', t('Valid CSS class names must begin with a letter and may be followed by '
+                                               .'letters, digits, dashes, or underscores.'));
+  }
+}

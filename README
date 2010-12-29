@@ -1,0 +1,22 @@
+This Drupal 6 module works around a limitation in IE7's PNG support so that
+fade in/out transition effects work properly with PNGs that include
+transparency.
+
+More on the IE7 transparent PNG limitation:
+IE7 is only able to apply a single filter to a particular element. A filter is
+used to render PNG images that include transparency so an additional filter,
+such as a jQuery fade in/out effect, applied to a PNG that includes
+transparency produces "noise" (looks like a weak analogue tv signal) during the
+transition. See http://blogs.msdn.com/ie/archive/2005/04/26/412263.aspx for
+more information, especially the first point under "There are also a couple of
+limitations worth mentioning" for more info.
+
+The module is a "drupalisation" of a jQuery plugin written by Darko Zoroja
+which can be found here:
+http://stackoverflow.com/questions/1156985/jquery-cycle-ie7-transparent-png-problem.
+
+Why is this not on drupal.org?
+I attempted to submit this as a module, but was told it would be
+better to incorporate it into one of the existing IE PNG fix modules.
+Attempts were made to contact the maintainers of the existing modules,
+but it would seem they have moved on from supporting tired old browsers ;-).

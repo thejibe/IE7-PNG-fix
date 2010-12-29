@@ -1,0 +1,5 @@
+; $Id:
+name = "IE7 PNG Fix"
+description = "Fix IE7 PNG support so that opacity effects, such as jQuery fades, appear properly when applied to PNG images that include transparency."
+package = "Other"
+core = 6.x
